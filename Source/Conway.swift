@@ -19,24 +19,29 @@ extension Int {
   }
 }
 
-class Conway {
-  struct Point {
-    var row, column: Int
-    
-    init(row: Int, column: Int) {
-      self.row = row
-      self.column = column
-    }
-  }
+struct Point {
+  var row, column: Int
   
+  init(row: Int, column: Int) {
+    self.row = row
+    self.column = column
+  }
+}
+
+protocol ConwayDelegate {
+  func conway(gameOfLife: Conway, cellsDidActivateAtPoints points: Array<Point>)
+  func conway(gameOfLife: Conway, cellsDidDieAtPoinst points: Array<Point>)
+}
+
+class Conway {
   var grid: Dictionary<Int, Dictionary<Int, Int>>
   var originRule = [3]
   var stayAliveRule = [2, 3]
+  var delegate: ConwayDelegate?
   
   var neighborCounts: Dictionary<Int, Dictionary<Int, Int>> {
   get {
     var counts = Dictionary<Int, Dictionary<Int, Int>>()
-    
     for (rowNumber, row) in grid {
       let previousRow = (rowNumber == 0) ? size.rows - 1 : rowNumber - 1
       let nextRow = (rowNumber == (size.rows - 1)) ? 0 : rowNumber + 1
@@ -44,10 +49,10 @@ class Conway {
         let previousColumn = (columnNumber == 0) ? size.columns - 1 : columnNumber - 1
         let nextColumn = (columnNumber == (size.columns - 1)) ? 0 : columnNumber + 1
         
-        counts[previousRow] = self.updateCounts(counts[previousRow], columns: [previousColumn, columnNumber, nextColumn])
-        counts[nextRow] = self.updateCounts(counts[nextRow], columns: [previousColumn, columnNumber, nextColumn])
+        counts[previousRow] = updateCounts(counts[previousRow], columns: [previousColumn, columnNumber, nextColumn])
+        counts[nextRow] = updateCounts(counts[nextRow], columns: [previousColumn, columnNumber, nextColumn])
         // Current row is a special case
-        var currentRow = self.updateCounts(counts[rowNumber], columns: [previousColumn, nextColumn])
+        var currentRow = updateCounts(counts[rowNumber], columns: [previousColumn, nextColumn])
         if !currentRow[columnNumber] {
           currentRow[columnNumber] = 0
         }
@@ -57,6 +62,17 @@ class Conway {
     
     return counts
   }
+  }
+  
+  var size: (rows: Int, columns: Int) {
+  willSet {
+    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: newValue.rows)
+  }
+  }
+  
+  init(rows: Int, columns: Int) {
+    self.size = (rows, columns)
+    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: rows)
   }
   
   // Increment each column by 1
@@ -70,17 +86,6 @@ class Conway {
       }
     }
     return updatedCounts
-  }
-  
-  var size: (rows: Int, columns: Int) {
-  willSet {
-    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: newValue.rows)
-  }
-  }
-  
-  init(rows: Int, columns: Int) {
-    self.size = (rows, columns)
-    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: rows)
   }
   
   func flipStateAtPoint(row: Int, column: Int) {
@@ -102,7 +107,8 @@ class Conway {
   
   func tick() {
     let then = CFAbsoluteTimeGetCurrent()
-    var flipQueue = Array<Point>()
+    var aliveQueue = Array<Point>()
+    var deadQueue = Array<Point>()
     
     let neighborCounts = self.neighborCounts
     
@@ -111,20 +117,24 @@ class Conway {
         if let value = grid[rowNumber]?[columnNumber]? {
           // A live cell stays alive if it's neighbor count is contained in the stayAliveRule array
           if !neighborCount.isIn(stayAliveRule) {
-            flipQueue.append(Point(row:rowNumber, column:columnNumber))
+            aliveQueue.append(Point(row:rowNumber, column:columnNumber))
           }
         } else {
           // A dead cell comes to life if it's neighbor count is contained in the originRule
           if neighborCount.isIn(originRule) {
-            flipQueue.append(Point(row:rowNumber, column:columnNumber))
+            deadQueue.append(Point(row:rowNumber, column:columnNumber))
           }
         }
       }
     }
     
+    let flipQueue = aliveQueue + deadQueue
     for point in flipQueue {
       self.flipStateAtPoint(point.row, column: point.column)
     }
+    
+    delegate?.conway(self, cellsDidActivateAtPoints: aliveQueue)
+    delegate?.conway(self, cellsDidDieAtPoinst: deadQueue)
     
     println("Tick took: \(CFAbsoluteTimeGetCurrent() - then) seconds.")
     println(self.descriptionWithNeighborCounts())
