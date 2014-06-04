@@ -8,6 +8,14 @@
 
 import UIKit
 
+extension Int {
+  func times(task: () -> ()) {
+    for i in 0..self {
+      task()
+    }
+  }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
                             
@@ -16,6 +24,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
     // Override point for customization after application launch.
+    
+    var game = Conway(rows: 20, columns: 20)
+    game.flipStateAtPoint(9, column: 6)
+    game.flipStateAtPoint(9, column: 7)
+    game.flipStateAtPoint(7, column: 7)
+    game.flipStateAtPoint(8, column: 9)
+    game.flipStateAtPoint(9, column: 10)
+    game.flipStateAtPoint(9, column: 11)
+    game.flipStateAtPoint(9, column: 12)
+    println(game.descriptionWithNeighborCounts())
+    
+    100.times {
+      game.tick()
+    }
+    
     return true
   }
 

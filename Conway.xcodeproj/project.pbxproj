@@ -12,6 +12,7 @@
 		BC96050A193F2E0A00A8C307 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC960508193F2E0A00A8C307 /* Main.storyboard */; };
 		BC96050C193F2E0A00A8C307 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC96050B193F2E0A00A8C307 /* Images.xcassets */; };
 		BC960518193F2E0A00A8C307 /* ConwayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960517193F2E0A00A8C307 /* ConwayTests.swift */; };
+		BC960523193F2E3F00A8C307 /* Conway.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960522193F2E3F00A8C307 /* Conway.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 		BC960511193F2E0A00A8C307 /* ConwayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConwayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC960516193F2E0A00A8C307 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC960517193F2E0A00A8C307 /* ConwayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConwayTests.swift; sourceTree = "<group>"; };
+		BC960522193F2E3F00A8C307 /* Conway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conway.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 		BC9604F6193F2E0A00A8C307 = {
 			isa = PBXGroup;
 			children = (
+				BC960521193F2E2A00A8C307 /* Source */,
 				BC960501193F2E0A00A8C307 /* Conway */,
 				BC960514193F2E0A00A8C307 /* ConwayTests */,
 				BC960500193F2E0A00A8C307 /* Products */,
@@ -107,6 +110,14 @@
 				BC960516193F2E0A00A8C307 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BC960521193F2E2A00A8C307 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				BC960522193F2E3F00A8C307 /* Conway.swift */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,6 +221,7 @@
 			files = (
 				BC960507193F2E0A00A8C307 /* ViewController.swift in Sources */,
 				BC960505193F2E0A00A8C307 /* AppDelegate.swift in Sources */,
+				BC960523193F2E3F00A8C307 /* Conway.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
