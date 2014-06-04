@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
     // Override point for customization after application launch.
     
-    var game = Conway(rows: 20, columns: 20)
+    var game = Conway(rows: 40, columns: 40)
     game.flipStateAtPoint(9, column: 6)
     game.flipStateAtPoint(9, column: 7)
     game.flipStateAtPoint(7, column: 7)

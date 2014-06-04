@@ -30,44 +30,46 @@ class Conway {
   }
   
   var grid: Dictionary<Int, Dictionary<Int, Int>>
-  var zeroCounts: Dictionary<Int, Dictionary<Int, Int>>
   var originRule = [3]
   var stayAliveRule = [2, 3]
   
   var neighborCounts: Dictionary<Int, Dictionary<Int, Int>> {
   get {
-    var counts = zeroCounts
+    var counts = Dictionary<Int, Dictionary<Int, Int>>()
     
     for (rowNumber, row) in grid {
       let previousRow = (rowNumber == 0) ? size.rows - 1 : rowNumber - 1
       let nextRow = (rowNumber == (size.rows - 1)) ? 0 : rowNumber + 1
       for (columnNumber, value) in row {
-        if(value == 1) {
-          let previousColumn = (columnNumber == 0) ? size.columns - 1 : columnNumber - 1
-          let nextColumn = (columnNumber == (size.columns - 1)) ? 0 : columnNumber + 1
-          
-          var previousRowCounts = counts[previousRow]!
-          previousRowCounts[previousColumn] = previousRowCounts[previousColumn]! + 1
-          previousRowCounts[columnNumber] = previousRowCounts[columnNumber]! + 1
-          previousRowCounts[nextColumn] = previousRowCounts[nextColumn]! + 1
-          counts[previousRow] = previousRowCounts
-          
-          var currentRowCounts = counts[rowNumber]!
-          currentRowCounts[previousColumn] = currentRowCounts[previousColumn]! + 1
-          currentRowCounts[nextColumn] = currentRowCounts[nextColumn]! + 1
-          counts[rowNumber] = currentRowCounts
-          
-          var nextRowCounts = counts[nextRow]!
-          nextRowCounts[previousColumn] = nextRowCounts[previousColumn]! + 1
-          nextRowCounts[columnNumber] = nextRowCounts[columnNumber]! + 1
-          nextRowCounts[nextColumn] = nextRowCounts[nextColumn]! + 1
-          counts[nextRow] = nextRowCounts
+        let previousColumn = (columnNumber == 0) ? size.columns - 1 : columnNumber - 1
+        let nextColumn = (columnNumber == (size.columns - 1)) ? 0 : columnNumber + 1
+        
+        counts[previousRow] = self.updateCounts(counts[previousRow], columns: [previousColumn, columnNumber, nextColumn])
+        counts[nextRow] = self.updateCounts(counts[nextRow], columns: [previousColumn, columnNumber, nextColumn])
+        // Current row is a special case
+        var currentRow = self.updateCounts(counts[rowNumber], columns: [previousColumn, nextColumn])
+        if !currentRow[columnNumber] {
+          currentRow[columnNumber] = 0
         }
+        counts[rowNumber] = currentRow
       }
     }
     
     return counts
   }
+  }
+  
+  // Increment each column by 1
+  func updateCounts(row: Dictionary<Int, Int>?, columns: Int[]) -> Dictionary<Int, Int> {
+    var updatedCounts = row? ? row! : Dictionary<Int,Int>()
+    for i in columns {
+      if let count = updatedCounts[i] {
+        updatedCounts[i] = count + 1
+      } else {
+        updatedCounts[i] = 1
+      }
+    }
+    return updatedCounts
   }
   
   var size: (rows: Int, columns: Int) {
@@ -79,14 +81,6 @@ class Conway {
   init(rows: Int, columns: Int) {
     self.size = (rows, columns)
     grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: rows)
-    zeroCounts = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: rows)
-    for r in 0..size.rows {
-      var row = Dictionary<Int, Int>()
-      for c in 0..size.columns {
-        row[c] = 0
-      }
-      zeroCounts[r] = row
-    }
   }
   
   func flipStateAtPoint(row: Int, column: Int) {
@@ -169,6 +163,8 @@ class Conway {
       for column in 0..size.columns {
         if let value = neighborCounts[row]?[column]? {
           description += "\(value) "
+        } else {
+          description += ". "
         }
       }
       description += "\n"
