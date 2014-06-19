@@ -9,7 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-                            
+  @lazy var conway = Conway(rows: 32, columns: 24)
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.

@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C626518C34B45509B3BCBDC /* libPods-Conway.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 499BFF6383AF41FA92338C6E /* libPods-Conway.a */; };
 		BC960505193F2E0A00A8C307 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960504193F2E0A00A8C307 /* AppDelegate.swift */; };
 		BC960507193F2E0A00A8C307 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960506193F2E0A00A8C307 /* ViewController.swift */; };
 		BC96050A193F2E0A00A8C307 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC960508193F2E0A00A8C307 /* Main.storyboard */; };
 		BC96050C193F2E0A00A8C307 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC96050B193F2E0A00A8C307 /* Images.xcassets */; };
 		BC960518193F2E0A00A8C307 /* ConwayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960517193F2E0A00A8C307 /* ConwayTests.swift */; };
 		BC960523193F2E3F00A8C307 /* Conway.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC960522193F2E3F00A8C307 /* Conway.swift */; };
+		BCE3B5A0194097230084FC4C /* ConwayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE3B59F194097230084FC4C /* ConwayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		499BFF6383AF41FA92338C6E /* libPods-Conway.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Conway.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC085B63193F916100A45BD8 /* Conway-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Conway-Bridging-Header.h"; sourceTree = "<group>"; };
 		BC9604FF193F2E0A00A8C307 /* Conway.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Conway.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC960503193F2E0A00A8C307 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC960504193F2E0A00A8C307 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -36,6 +40,8 @@
 		BC960516193F2E0A00A8C307 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC960517193F2E0A00A8C307 /* ConwayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConwayTests.swift; sourceTree = "<group>"; };
 		BC960522193F2E3F00A8C307 /* Conway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conway.swift; sourceTree = "<group>"; };
+		BCE3B59F194097230084FC4C /* ConwayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConwayView.swift; sourceTree = "<group>"; };
+		C4D4C1046375448ABED0C5F1 /* Pods-Conway.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Conway.xcconfig"; path = "Pods/Pods-Conway.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C626518C34B45509B3BCBDC /* libPods-Conway.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +63,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7D9F485E695C49ACB7D553BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				499BFF6383AF41FA92338C6E /* libPods-Conway.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BC9604F6193F2E0A00A8C307 = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +78,8 @@
 				BC960501193F2E0A00A8C307 /* Conway */,
 				BC960514193F2E0A00A8C307 /* ConwayTests */,
 				BC960500193F2E0A00A8C307 /* Products */,
+				C4D4C1046375448ABED0C5F1 /* Pods-Conway.xcconfig */,
+				7D9F485E695C49ACB7D553BF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +97,7 @@
 			children = (
 				BC960504193F2E0A00A8C307 /* AppDelegate.swift */,
 				BC960506193F2E0A00A8C307 /* ViewController.swift */,
+				BCE3B59F194097230084FC4C /* ConwayView.swift */,
 				BC960508193F2E0A00A8C307 /* Main.storyboard */,
 				BC96050B193F2E0A00A8C307 /* Images.xcassets */,
 				BC960502193F2E0A00A8C307 /* Supporting Files */,
@@ -91,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				BC960503193F2E0A00A8C307 /* Info.plist */,
+				BC085B63193F916100A45BD8 /* Conway-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -127,9 +146,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BC96051B193F2E0A00A8C307 /* Build configuration list for PBXNativeTarget "Conway" */;
 			buildPhases = (
+				83D8EC40D53549FAA2A69A46 /* Check Pods Manifest.lock */,
 				BC9604FB193F2E0A00A8C307 /* Sources */,
 				BC9604FC193F2E0A00A8C307 /* Frameworks */,
 				BC9604FD193F2E0A00A8C307 /* Resources */,
+				A22CBAD5B51A458CA9407A36 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -169,6 +190,7 @@
 				TargetAttributes = {
 					BC9604FE193F2E0A00A8C307 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = REGGDNJ825;
 					};
 					BC960510193F2E0A00A8C307 = {
 						CreatedOnToolsVersion = 6.0;
@@ -214,6 +236,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		83D8EC40D53549FAA2A69A46 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A22CBAD5B51A458CA9407A36 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-Conway-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BC9604FB193F2E0A00A8C307 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -222,6 +277,7 @@
 				BC960507193F2E0A00A8C307 /* ViewController.swift in Sources */,
 				BC960505193F2E0A00A8C307 /* AppDelegate.swift in Sources */,
 				BC960523193F2E3F00A8C307 /* Conway.swift in Sources */,
+				BCE3B5A0194097230084FC4C /* ConwayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,23 +392,30 @@
 		};
 		BC96051C193F2E0A00A8C307 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4D4C1046375448ABED0C5F1 /* Pods-Conway.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Conway/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Conway/Conway-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		BC96051D193F2E0A00A8C307 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4D4C1046375448ABED0C5F1 /* Pods-Conway.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Conway/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Conway/Conway-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -411,6 +474,7 @@
 				BC96051D193F2E0A00A8C307 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC96051E193F2E0A00A8C307 /* Build configuration list for PBXNativeTarget "ConwayTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +483,7 @@
 				BC960520193F2E0A00A8C307 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

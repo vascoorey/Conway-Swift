@@ -8,24 +8,72 @@
 
 import Foundation
 
-extension Int {
-  func isIn(a: Array<Int>) -> Bool {
-    for member in a {
-      if self == member {
-        return true
-      }
+struct SetGenerator<T> : Generator {
+  typealias Element = T
+  
+  var items: Slice<Element>
+  
+  init(items: Slice<Element>) {
+    self.items = items
+  }
+  
+  mutating func next() -> Element?  {
+    if items.isEmpty {
+      return nil
     }
-    return false
+    let ret = items[0]
+    items = items[1..items.count]
+    return ret
+  }
+  
+  var hasNext: Bool {
+  return !items.isEmpty
+  }
+}
+
+struct Set<T: Hashable> : Printable {
+  typealias Element = T
+  
+  var items = Dictionary<T, T>()
+  
+  var count: Int {
+  return items.count
+  }
+  
+  mutating func append(item: Element) {
+    items[item] = item
+  }
+  
+  mutating func remove(item: Element) {
+    items[item] = nil
+  }
+  
+  var description: String {
+  var desc = "<"
+  var generator = self.generate()
+  while let next = generator.next() {
+    desc += "\(next)"
+    if generator.hasNext {
+      desc += ", "
+    }
+  }
+  return desc + ">"
+  }
+}
+
+extension Set: Sequence {
+  func generate() -> SetGenerator<Element> {
+    let keys = Array(items.keys)
+    return SetGenerator(items: keys[0..keys.count])
   }
 }
 
 struct Point {
   var row, column: Int
-  
-  init(row: Int, column: Int) {
-    self.row = row
-    self.column = column
-  }
+}
+
+struct Size {
+  var rows, columns: Int
 }
 
 protocol ConwayDelegate {
@@ -33,119 +81,122 @@ protocol ConwayDelegate {
   func conway(gameOfLife: Conway, cellsDidDieAtPoinst points: Array<Point>)
 }
 
-class Conway {
-  var grid: Dictionary<Int, Dictionary<Int, Int>>
-  var originRule = [3]
-  var stayAliveRule = [2, 3]
+class Conway : Printable {
+  var grid: Bool[]
+  var counts: Int[]
+  var changes: Set<Int>
   var delegate: ConwayDelegate?
   
-  var neighborCounts: Dictionary<Int, Dictionary<Int, Int>> {
-  get {
-    var counts = Dictionary<Int, Dictionary<Int, Int>>()
-    for (rowNumber, row) in grid {
-      let previousRow = (rowNumber == 0) ? size.rows - 1 : rowNumber - 1
-      let nextRow = (rowNumber == (size.rows - 1)) ? 0 : rowNumber + 1
-      for (columnNumber, value) in row {
-        let previousColumn = (columnNumber == 0) ? size.columns - 1 : columnNumber - 1
-        let nextColumn = (columnNumber == (size.columns - 1)) ? 0 : columnNumber + 1
-        
-        counts[previousRow] = updateCounts(counts[previousRow], columns: [previousColumn, columnNumber, nextColumn])
-        counts[nextRow] = updateCounts(counts[nextRow], columns: [previousColumn, columnNumber, nextColumn])
-        // Current row is a special case
-        var currentRow = updateCounts(counts[rowNumber], columns: [previousColumn, nextColumn])
-        if !currentRow[columnNumber] {
-          currentRow[columnNumber] = 0
-        }
-        counts[rowNumber] = currentRow
-      }
-    }
-    
-    return counts
-  }
-  }
-  
-  var size: (rows: Int, columns: Int) {
+  var size: Size {
   willSet {
-    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: newValue.rows)
+    grid = Array<Bool>(count: newValue.rows * newValue.columns, repeatedValue: false)
   }
   }
   
   init(rows: Int, columns: Int) {
-    self.size = (rows, columns)
-    grid = Dictionary<Int, Dictionary<Int, Int>>(minimumCapacity: rows)
+    self.size = Size(rows: rows, columns: columns)
+    grid = Bool[](count: rows * columns, repeatedValue: false)
+    counts = Int[](count: rows * columns, repeatedValue: 0)
+    changes = Set<Int>()
   }
-  
-  // Increment each column by 1
-  func updateCounts(row: Dictionary<Int, Int>?, columns: Int[]) -> Dictionary<Int, Int> {
-    var updatedCounts = row? ? row! : Dictionary<Int,Int>()
-    for i in columns {
-      if let count = updatedCounts[i] {
-        updatedCounts[i] = count + 1
-      } else {
-        updatedCounts[i] = 1
-      }
-    }
-    return updatedCounts
-  }
-  
+
   func flipStateAtPoint(row: Int, column: Int) {
     assert(row >= 0 && row < size.rows && column >= 0 && column < size.columns)
     
-    if var currentRow = grid[row] {
-      if currentRow[column] {
-        currentRow[column] = nil
-      } else {
-        currentRow[column] = 1
-      }
-      grid[row] = currentRow
-    } else {
-      var currentRow = Dictionary<Int, Int>()
-      currentRow[column] = 1
-      grid[row] = currentRow
-    }
+    let index = row * size.columns + column
+    let newValue = !grid[index]
+    grid[index] = newValue
+    updateNeighborCounts(neighbors(index, row:row, column:column), adding: newValue)
   }
   
+  func flipStateAtIndex(index: Int) {
+    let newValue = !grid[index]
+    
+//    if newValue {
+//      changes.append(index)
+//    } else {
+//      changes.remove(index)
+//    }
+    
+    grid[index] = newValue
+    let row = index / size.columns
+    let column = index % size.columns
+    updateNeighborCounts(neighbors(index, row:row, column:column), adding: newValue)
+  }
+  
+  func neighbors(index: Int, row: Int, column: Int) -> Int[] {
+    var neighbors = Array<Int>(count: 8, repeatedValue: 0)
+
+    // Wrap around if row = 0 || row = size.rows - 1
+    // Or column = 0 || column = size.columns - 1
+    let previousRow = row == 0 ? size.rows - 1 : row - 1
+    let nextRow = row == (size.rows - 1) ? 0 : row + 1
+    let previousColumn = column == 0 ? size.columns - 1 : column - 1
+    let nextColumn = column == (size.columns - 1) ? 0 : column + 1
+
+    neighbors[0] = previousRow * size.columns + previousColumn
+    neighbors[1] = previousRow * size.columns + column
+    neighbors[2] = previousRow * size.columns + nextColumn
+    neighbors[3] = row * size.columns + previousColumn
+    neighbors[4] = row * size.columns + nextColumn
+    neighbors[5] = nextRow * size.columns + previousColumn
+    neighbors[6] = nextRow * size.columns + column
+    neighbors[7] = nextRow * size.columns + nextColumn
+    
+    return neighbors
+  }
+
+  func updateNeighborCounts(indices: Int[], adding: Bool) {
+    for i in indices {
+//      changes.append(i)
+      let count = counts[i]
+      if adding {
+        counts[i] = count + 1
+      } else {
+        if count > 0 {
+          counts[i] = count - 1
+        }
+//        if count == 0 && !grid[i] {
+//          changes.remove(i)
+//        }
+      }
+    }
+  }
+
   func tick() {
     let then = CFAbsoluteTimeGetCurrent()
-    var aliveQueue = Array<Point>()
-    var deadQueue = Array<Point>()
+    var aliveQueue = Int[]()
+    var deadQueue = Int[]()
     
-    let neighborCounts = self.neighborCounts
-    
-    for (rowNumber, row) in neighborCounts {
-      for (columnNumber, neighborCount) in row {
-        if let value = grid[rowNumber]?[columnNumber]? {
-          // A live cell stays alive if it's neighbor count is contained in the stayAliveRule array
-          if !neighborCount.isIn(stayAliveRule) {
-            aliveQueue.append(Point(row:rowNumber, column:columnNumber))
-          }
-        } else {
-          // A dead cell comes to life if it's neighbor count is contained in the originRule
-          if neighborCount.isIn(originRule) {
-            deadQueue.append(Point(row:rowNumber, column:columnNumber))
-          }
+    for index in 0..grid.count {
+      let value = grid[index]
+      let count = counts[index]
+      if value {
+        if count < 2 || count > 3 {
+          deadQueue.append(index)
+        }
+      } else {
+        if count == 3 {
+          aliveQueue.append(index)
         }
       }
     }
     
-    let flipQueue = aliveQueue + deadQueue
-    for point in flipQueue {
-      self.flipStateAtPoint(point.row, column: point.column)
+    for i in deadQueue + aliveQueue {
+      flipStateAtIndex(i)
     }
-    
-    delegate?.conway(self, cellsDidActivateAtPoints: aliveQueue)
-    delegate?.conway(self, cellsDidDieAtPoinst: deadQueue)
-    
     println("Tick took: \(CFAbsoluteTimeGetCurrent() - then) seconds.")
-    println(self.descriptionWithNeighborCounts())
+//    println(self.descriptionWithNeighborCounts)
   }
   
-  func description() -> String {
+  var description: String {
+  get {
     var description = ""
     
     for row in 0..size.rows {
       for column in 0..size.columns {
-        if grid[row]?[column] {
+        let idx = row * size.columns + column
+        if grid[idx] {
           description += "o "
         } else {
           description += ". "
@@ -156,14 +207,16 @@ class Conway {
     
     return description
   }
+  }
   
-  func descriptionWithNeighborCounts() -> String {
+  var descriptionWithNeighborCounts: String {
+  get {
     var description = ""
-    var neighborCounts = self.neighborCounts
     
     for row in 0..size.rows {
       for column in 0..size.columns {
-        if grid[row]?[column] {
+        let idx = row * size.columns + column
+        if grid[idx] {
           description += "o "
         } else {
           description += ". "
@@ -171,8 +224,10 @@ class Conway {
       }
       description += " | "
       for column in 0..size.columns {
-        if let value = neighborCounts[row]?[column]? {
-          description += "\(value) "
+        let idx = row * size.columns + column
+        let count = counts[idx]
+        if count > 0 {
+          description += "\(count) "
         } else {
           description += ". "
         }
@@ -181,5 +236,6 @@ class Conway {
     }
     
     return description
+  }
   }
 }

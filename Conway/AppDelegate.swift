@@ -21,11 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             
   var window: UIWindow?
 
-
+  
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
     // Override point for customization after application launch.
-    
-    var game = Conway(rows: 40, columns: 40)
+    var game = Conway(rows: 500, columns: 500)
     game.flipStateAtPoint(9, column: 6)
     game.flipStateAtPoint(9, column: 7)
     game.flipStateAtPoint(7, column: 7)
@@ -33,10 +32,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     game.flipStateAtPoint(9, column: 10)
     game.flipStateAtPoint(9, column: 11)
     game.flipStateAtPoint(9, column: 12)
-    println(game.descriptionWithNeighborCounts())
+//    println(game.descriptionWithNeighborCounts())
     
-    100.times {
+    1000.times {
       game.tick()
+//      println(game.descriptionWithNeighborCounts)
     }
     
     return true
